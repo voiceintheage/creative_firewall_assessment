@@ -135,62 +135,125 @@
             gap: 5px;
         }
 
-        .btn-circle, .btn-handshake, .btn-star {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s;
+        .spectrum-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            min-width: 200px;
+        }
+
+        .spectrum-item {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-circle {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .btn-circle:hover {
-            background: #fecaca;
-            transform: scale(1.1);
-        }
-
-        .btn-circle.active {
-            background: #dc2626;
-            color: white;
-        }
-
-        .btn-handshake {
-            background: #ede9fe;
-            color: #7c3aed;
-        }
-
-        .btn-handshake:hover {
-            background: #ddd6fe;
-            transform: scale(1.1);
-        }
-
-        .btn-handshake.active {
-            background: #7c3aed;
-            color: white;
-        }
-
-        .btn-star {
-            background: #f3f4f6;
+        .spectrum-item label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 80px;
             color: #374151;
         }
 
-        .btn-star:hover {
-            background: #e5e7eb;
-            transform: scale(1.1);
+        .spectrum-slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
         }
 
-        .btn-star.active {
-            background: #374151;
-            color: white;
+        .automatable-slider {
+            background: linear-gradient(to right, #fee2e2, #dc2626);
+        }
+
+        .enhanceable-slider {
+            background: linear-gradient(to right, #ede9fe, #7c3aed);
+        }
+
+        .irreplaceable-slider {
+            background: linear-gradient(to right, #f3f4f6, #374151);
+        }
+
+        .spectrum-value {
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .spectrum-input {
+            width: 50px;
+            padding: 4px 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            background: white;
+        }
+
+        .spectrum-input:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+
+        .spectrum-total {
+            text-align: center;
+            font-weight: 600;
+            padding-top: 10px;
+            border-top: 2px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .total-percentage {
+            color: #dc2626;
+        }
+
+        .total-percentage.complete {
+            color: #059669;
+        }
+
+        .total-percentage.incomplete {
+            color: #dc2626;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f9fafb;
+            margin-top: 4px;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #dc2626;
+            background: white;
+        }
+
+        .notes-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .validation-warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
         }
 
         .drag-handle {
@@ -552,10 +615,30 @@
                         <input type="text" class="tools-input" placeholder="Tools/software used (e.g., Photoshop, Figma, Logic Pro...)" data-tools="0">
                     </div>
                     <div class="step-buttons">
-                        <div class="step-controls">
-                            <button class="btn-circle" onclick="toggleButton(this, 'circle')" title="Automatable">⭕</button>
-                            <button class="btn-handshake" onclick="toggleButton(this, 'handshake')" title="Enhanceable">🤝</button>
-                            <button class="btn-star" onclick="toggleButton(this, 'star')" title="Irreplaceable">⭐</button>
+                        <div class="spectrum-controls">
+                            <div class="spectrum-item">
+                                <label>Automatable %</label>
+                                <input type="range" class="spectrum-slider automatable-slider" min="0" max="100" value="0" data-category="automatable">
+                                <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="automatable">
+                            </div>
+                            <textarea class="notes-input" placeholder="Notes: Which specific parts of this step could be automated? (optional)" data-notes="automatable"></textarea>
+                            
+                            <div class="spectrum-item">
+                                <label>Enhanceable %</label>
+                                <input type="range" class="spectrum-slider enhanceable-slider" min="0" max="100" value="0" data-category="enhanceable">
+                                <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="enhanceable">
+                            </div>
+                            <textarea class="notes-input" placeholder="Notes: How could AI enhance or collaborate on these parts? (optional)" data-notes="enhanceable"></textarea>
+                            
+                            <div class="spectrum-item">
+                                <label>Irreplaceable %</label>
+                                <input type="range" class="spectrum-slider irreplaceable-slider" min="0" max="100" value="0" data-category="irreplaceable">
+                                <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="irreplaceable">
+                            </div>
+                            <textarea class="notes-input" placeholder="Notes: What makes these parts uniquely yours? (optional)" data-notes="irreplaceable"></textarea>
+                            
+                            <div class="spectrum-total">Total: <span class="total-percentage incomplete">0%</span></div>
+                            <div class="validation-warning">⚠️ Please adjust percentages to total exactly 100% before this step counts toward your assessment.</div>
                         </div>
                         <div class="step-controls">
                             <button class="drag-handle" title="Drag to reorder">⋮⋮</button>
@@ -580,15 +663,15 @@
                     <div class="legend-visual">
                         <div class="legend-item-visual">
                             <div class="legend-circle-visual"></div>
-                            <span id="automatableLabel">0 Automatable</span>
+                            <span id="automatableLabel">0% Automatable</span>
                         </div>
                         <div class="legend-item-visual">
                             <div class="legend-handshake-visual">🤝</div>
-                            <span id="enhanceableLabel">0 Enhanceable</span>
+                            <span id="enhanceableLabel">0% Enhanceable</span>
                         </div>
                         <div class="legend-item-visual">
                             <div class="legend-star-visual"></div>
-                            <span id="irreplaceableLabel">0 Irreplaceable</span>
+                            <span id="irreplaceableLabel">0% Irreplaceable</span>
                         </div>
                     </div>
                 </div>
@@ -598,16 +681,16 @@
                     <span class="metric-value" id="totalSteps">0</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Automatable Tasks</span>
-                    <span class="metric-value vulnerable" id="automatableCount">0</span>
+                    <span class="metric-label">Average Automatable %</span>
+                    <span class="metric-value vulnerable" id="automatableCount">0%</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Enhanceable Tasks</span>
-                    <span class="metric-value" id="enhanceableCount" style="color: #7c3aed;">0</span>
+                    <span class="metric-label">Average Enhanceable %</span>
+                    <span class="metric-value" id="enhanceableCount" style="color: #7c3aed;">0%</span>
                 </div>
                 <div class="metric">
-                    <span class="metric-label">Irreplaceable Tasks</span>
-                    <span class="metric-value protected" id="irreplaceableCount">0</span>
+                    <span class="metric-label">Average Irreplaceable %</span>
+                    <span class="metric-value protected" id="irreplaceableCount">0%</span>
                 </div>
                 <div class="metric">
                     <span class="metric-label">Creative Firewall Score</span>
@@ -638,10 +721,30 @@
                     <input type="text" class="tools-input" placeholder="Tools/software used..." data-tools="${stepCount}">
                 </div>
                 <div class="step-buttons">
-                    <div class="step-controls">
-                        <button class="btn-circle" onclick="toggleButton(this, 'circle')" title="Automatable">⭕</button>
-                        <button class="btn-handshake" onclick="toggleButton(this, 'handshake')" title="Enhanceable">🤝</button>
-                        <button class="btn-star" onclick="toggleButton(this, 'star')" title="Irreplaceable">⭐</button>
+                    <div class="spectrum-controls">
+                        <div class="spectrum-item">
+                            <label>Automatable %</label>
+                            <input type="range" class="spectrum-slider automatable-slider" min="0" max="100" value="0" data-category="automatable">
+                            <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="automatable">
+                        </div>
+                        <textarea class="notes-input" placeholder="Notes: Which specific parts of this step could be automated? (optional)" data-notes="automatable"></textarea>
+                        
+                        <div class="spectrum-item">
+                            <label>Enhanceable %</label>
+                            <input type="range" class="spectrum-slider enhanceable-slider" min="0" max="100" value="0" data-category="enhanceable">
+                            <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="enhanceable">
+                        </div>
+                        <textarea class="notes-input" placeholder="Notes: How could AI enhance or collaborate on these parts? (optional)" data-notes="enhanceable"></textarea>
+                        
+                        <div class="spectrum-item">
+                            <label>Irreplaceable %</label>
+                            <input type="range" class="spectrum-slider irreplaceable-slider" min="0" max="100" value="0" data-category="irreplaceable">
+                            <input type="number" class="spectrum-input" min="0" max="100" value="0" data-category="irreplaceable">
+                        </div>
+                        <textarea class="notes-input" placeholder="Notes: What makes these parts uniquely yours? (optional)" data-notes="irreplaceable"></textarea>
+                        
+                        <div class="spectrum-total">Total: <span class="total-percentage incomplete">0%</span></div>
+                        <div class="validation-warning">⚠️ Please adjust percentages to total exactly 100% before this step counts toward your assessment.</div>
                     </div>
                     <div class="step-controls">
                         <button class="drag-handle" title="Drag to reorder">⋮⋮</button>
@@ -652,6 +755,7 @@
             container.appendChild(stepDiv);
             stepCount++;
             setupDragAndDrop(stepDiv);
+            setupSliderListeners(stepDiv);
             updateResults();
         }
 
@@ -661,93 +765,200 @@
             updateResults();
         }
 
-        function toggleButton(button, type) {
-            const stepDiv = button.closest('.step-input');
-            const allButtons = stepDiv.querySelectorAll('.btn-circle, .btn-handshake, .btn-star');
+        function setupSliderListeners(stepDiv) {
+            const sliders = stepDiv.querySelectorAll('.spectrum-slider');
+            const inputs = stepDiv.querySelectorAll('.spectrum-input');
+            const totalSpan = stepDiv.querySelector('.total-percentage');
             
-            // Remove active class from all buttons in this step
-            allButtons.forEach(btn => btn.classList.remove('active'));
+            // Function to sync values and enforce 100% limit
+            function syncValues(changedElement) {
+                const automatableSlider = stepDiv.querySelector('.automatable-slider');
+                const enhanceableSlider = stepDiv.querySelector('.enhanceable-slider');
+                const irreplaceableSlider = stepDiv.querySelector('.irreplaceable-slider');
+                
+                const automatableInput = stepDiv.querySelector('.spectrum-input[data-category="automatable"]');
+                const enhanceableInput = stepDiv.querySelector('.spectrum-input[data-category="enhanceable"]');
+                const irreplaceableInput = stepDiv.querySelector('.spectrum-input[data-category="irreplaceable"]');
+                
+                let automatable = parseInt(automatableSlider.value) || 0;
+                let enhanceable = parseInt(enhanceableSlider.value) || 0;
+                let irreplaceable = parseInt(irreplaceableSlider.value) || 0;
+                
+                let total = automatable + enhanceable + irreplaceable;
+                
+                // If total exceeds 100%, adjust the other values proportionally
+                if (total > 100) {
+                    const excess = total - 100;
+                    const changedCategory = changedElement.dataset.category;
+                    const changedValue = parseInt(changedElement.value) || 0;
+                    
+                    // Calculate remaining total from other categories
+                    const otherTotal = total - changedValue;
+                    
+                    if (otherTotal > 0) {
+                        // Reduce other categories proportionally
+                        if (changedCategory !== 'automatable') {
+                            const reduction = Math.floor(excess * (automatable / otherTotal));
+                            automatable = Math.max(0, automatable - reduction);
+                        }
+                        if (changedCategory !== 'enhanceable') {
+                            const reduction = Math.floor(excess * (enhanceable / otherTotal));
+                            enhanceable = Math.max(0, enhanceable - reduction);
+                        }
+                        if (changedCategory !== 'irreplaceable') {
+                            const reduction = Math.floor(excess * (irreplaceable / otherTotal));
+                            irreplaceable = Math.max(0, irreplaceable - reduction);
+                        }
+                        
+                        // Final adjustment to ensure we don't exceed 100%
+                        total = automatable + enhanceable + irreplaceable;
+                        if (total > 100) {
+                            const finalExcess = total - 100;
+                            if (changedCategory !== 'automatable' && automatable >= finalExcess) {
+                                automatable -= finalExcess;
+                            } else if (changedCategory !== 'enhanceable' && enhanceable >= finalExcess) {
+                                enhanceable -= finalExcess;
+                            } else if (changedCategory !== 'irreplaceable' && irreplaceable >= finalExcess) {
+                                irreplaceable -= finalExcess;
+                            }
+                        }
+                    }
+                }
+                
+                // Update all sliders and inputs
+                automatableSlider.value = automatable;
+                enhanceableSlider.value = enhanceable;
+                irreplaceableSlider.value = irreplaceable;
+                
+                automatableInput.value = automatable;
+                enhanceableInput.value = enhanceable;
+                irreplaceableInput.value = irreplaceable;
+                
+                // Update total display and validation
+                const finalTotal = automatable + enhanceable + irreplaceable;
+                totalSpan.textContent = finalTotal + '%';
+                
+                const warningDiv = stepDiv.querySelector('.validation-warning');
+                if (finalTotal === 100) {
+                    totalSpan.className = 'total-percentage complete';
+                    warningDiv.style.display = 'none';
+                } else {
+                    totalSpan.className = 'total-percentage incomplete';
+                    warningDiv.style.display = 'block';
+                }
+                
+                updateResults();
+            }
             
-            // Add active class to clicked button
-            button.classList.add('active');
+            // Slider change events
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    syncValues(this);
+                });
+            });
             
-            updateResults();
+            // Number input change events
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Clamp value between 0 and 100
+                    let value = parseInt(this.value) || 0;
+                    value = Math.max(0, Math.min(100, value));
+                    this.value = value;
+                    
+                    // Update corresponding slider temporarily
+                    const correspondingSlider = stepDiv.querySelector(`.spectrum-slider[data-category="${this.dataset.category}"]`);
+                    if (correspondingSlider) {
+                        correspondingSlider.value = value;
+                    }
+                    
+                    syncValues(this);
+                });
+            });
         }
 
         function updateResults() {
             const steps = document.querySelectorAll('.step-input');
             const inputs = document.querySelectorAll('.step-input .step-main input[data-step]');
             
-            // Only count steps with content
-            const filledSteps = Array.from(inputs).filter(input => input.value.trim().length > 0);
-            const totalSteps = filledSteps.length;
+            // Only count steps with content AND exactly 100% allocation
+            const validSteps = Array.from(steps).filter(step => {
+                const input = step.querySelector('.step-main input[data-step]');
+                if (!input || input.value.trim().length === 0) return false;
+                
+                // Check if percentages total exactly 100%
+                const automatableSlider = step.querySelector('.automatable-slider');
+                const enhanceableSlider = step.querySelector('.enhanceable-slider');
+                const irreplaceableSlider = step.querySelector('.irreplaceable-slider');
+                
+                const total = parseInt(automatableSlider.value) + parseInt(enhanceableSlider.value) + parseInt(irreplaceableSlider.value);
+                return total === 100;
+            });
+            
+            const totalSteps = validSteps.length;
             
             if (totalSteps === 0) {
                 document.getElementById('results').style.display = 'none';
                 return;
             }
 
-            let automatableCount = 0;
-            let enhanceableCount = 0;
-            let irreplaceableCount = 0;
+            let totalAutomatable = 0;
+            let totalEnhanceable = 0;
+            let totalIrreplaceable = 0;
 
-            steps.forEach(step => {
-                const input = step.querySelector('.step-main input[data-step]');
-                if (input && input.value.trim().length > 0) {
-                    const circleActive = step.querySelector('.btn-circle').classList.contains('active');
-                    const handshakeActive = step.querySelector('.btn-handshake').classList.contains('active');
-                    const starActive = step.querySelector('.btn-star').classList.contains('active');
-                    
-                    if (circleActive) automatableCount++;
-                    if (handshakeActive) enhanceableCount++;
-                    if (starActive) irreplaceableCount++;
-                }
+            validSteps.forEach(step => {
+                const automatableSlider = step.querySelector('.automatable-slider');
+                const enhanceableSlider = step.querySelector('.enhanceable-slider');
+                const irreplaceableSlider = step.querySelector('.irreplaceable-slider');
+                
+                totalAutomatable += parseInt(automatableSlider.value);
+                totalEnhanceable += parseInt(enhanceableSlider.value);
+                totalIrreplaceable += parseInt(irreplaceableSlider.value);
             });
 
-            const automatablePercentage = totalSteps > 0 ? Math.round((automatableCount / totalSteps) * 100) : 0;
-            const enhanceablePercentage = totalSteps > 0 ? Math.round((enhanceableCount / totalSteps) * 100) : 0;
-            const irreplaceablePercentage = totalSteps > 0 ? Math.round((irreplaceableCount / totalSteps) * 100) : 0;
+            const avgAutomatable = totalSteps > 0 ? Math.round(totalAutomatable / totalSteps) : 0;
+            const avgEnhanceable = totalSteps > 0 ? Math.round(totalEnhanceable / totalSteps) : 0;
+            const avgIrreplaceable = totalSteps > 0 ? Math.round(totalIrreplaceable / totalSteps) : 0;
 
             // Calculate Creative Firewall Score (Enhanceable + Irreplaceable)
-            const firewallScore = enhanceablePercentage + irreplaceablePercentage;
+            const firewallScore = avgEnhanceable + avgIrreplaceable;
 
             // Update visual progress bar
             const automatableBar = document.getElementById('automatableBar');
             const enhanceableBar = document.getElementById('enhanceableBar');
             const irreplaceableBar = document.getElementById('irreplaceableBar');
             
-            automatableBar.style.width = automatablePercentage + '%';
-            enhanceableBar.style.width = enhanceablePercentage + '%';
-            irreplaceableBar.style.width = irreplaceablePercentage + '%';
+            automatableBar.style.width = avgAutomatable + '%';
+            enhanceableBar.style.width = avgEnhanceable + '%';
+            irreplaceableBar.style.width = avgIrreplaceable + '%';
             
-            // Show counts in progress bar if there's enough space
-            if (automatablePercentage > 15) {
-                automatableBar.textContent = automatableCount;
+            // Show percentages in progress bar if there's enough space
+            if (avgAutomatable > 15) {
+                automatableBar.textContent = avgAutomatable + '%';
             } else {
                 automatableBar.textContent = '';
             }
             
-            if (enhanceablePercentage > 15) {
-                enhanceableBar.textContent = enhanceableCount;
+            if (avgEnhanceable > 15) {
+                enhanceableBar.textContent = avgEnhanceable + '%';
             } else {
                 enhanceableBar.textContent = '';
             }
 
-            if (irreplaceablePercentage > 15) {
-                irreplaceableBar.textContent = irreplaceableCount;
+            if (avgIrreplaceable > 15) {
+                irreplaceableBar.textContent = avgIrreplaceable + '%';
             } else {
                 irreplaceableBar.textContent = '';
             }
 
             // Update labels
-            document.getElementById('automatableLabel').textContent = `${automatableCount} Automatable`;
-            document.getElementById('enhanceableLabel').textContent = `${enhanceableCount} Enhanceable`;
-            document.getElementById('irreplaceableLabel').textContent = `${irreplaceableCount} Irreplaceable`;
+            document.getElementById('automatableLabel').textContent = `${avgAutomatable}% Automatable`;
+            document.getElementById('enhanceableLabel').textContent = `${avgEnhanceable}% Enhanceable`;
+            document.getElementById('irreplaceableLabel').textContent = `${avgIrreplaceable}% Irreplaceable`;
 
             document.getElementById('totalSteps').textContent = totalSteps;
-            document.getElementById('automatableCount').textContent = automatableCount;
-            document.getElementById('enhanceableCount').textContent = enhanceableCount;
-            document.getElementById('irreplaceableCount').textContent = irreplaceableCount;
+            document.getElementById('automatableCount').textContent = avgAutomatable + '%';
+            document.getElementById('enhanceableCount').textContent = avgEnhanceable + '%';
+            document.getElementById('irreplaceableCount').textContent = avgIrreplaceable + '%';
             document.getElementById('firewallScore').textContent = firewallScore + '%';
 
             // Color the firewall score
@@ -764,7 +975,7 @@
 
             // Assessment result
             const resultElement = document.getElementById('assessmentResult');
-            if (automatablePercentage >= 60) {
+            if (avgAutomatable >= 60) {
                 resultElement.className = 'assessment-result high-risk';
                 resultElement.textContent = '🚨 High Risk: Most of your workflow is automatable. Focus urgently on developing enhanceable and irreplaceable skills.';
             } else if (firewallScore >= 70) {
@@ -811,8 +1022,9 @@
             });
         }
 
-        // Setup drag and drop for initial step
+        // Setup drag and drop and sliders for initial step
         setupDragAndDrop(document.querySelector('.step-input'));
+        setupSliderListeners(document.querySelector('.step-input'));
 
         // Add event listeners to existing input
         document.querySelector('.step-input .step-main input[data-step]').addEventListener('input', updateResults);
