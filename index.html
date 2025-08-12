@@ -103,6 +103,10 @@
             margin-bottom: 8px;
         }
 
+        .step-input input[data-step] {
+            font-weight: 600;
+        }
+
         .step-input input:focus {
             outline: none;
             border-color: #dc2626;
@@ -523,6 +527,57 @@
             border: 2px solid #e5e7eb;
         }
 
+        .calculation-explanation {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .calculation-explanation h4 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .calc-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .calc-step {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .calc-step strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .calc-step p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .calc-step ul {
+            margin-left: 20px;
+            color: #4a5568;
+        }
+
+        .calc-step li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
         .cta {
             text-align: center;
             margin-top: 30px;
@@ -611,8 +666,8 @@
             <div id="stepsContainer">
                 <div class="step-input" draggable="true">
                     <div class="step-main">
-                        <input type="text" placeholder="First step in your workflow..." data-step="0">
-                        <input type="text" class="tools-input" placeholder="Tools/software used (e.g., Photoshop, Figma, Logic Pro...)" data-tools="0">
+                        <input type="text" placeholder="First step in your creative process..." data-step="0">
+                        <input type="text" class="tools-input" placeholder="Tools/software used (optional - e.g., Photoshop, Figma, Logic Pro...)" data-tools="0">
                     </div>
                     <div class="step-buttons">
                         <div class="spectrum-controls">
@@ -698,6 +753,28 @@
                 </div>
                 
                 <div id="assessmentResult" class="assessment-result"></div>
+                
+                <div class="calculation-explanation">
+                    <h4>How Your Score is Calculated</h4>
+                    <div class="calc-breakdown">
+                        <div class="calc-step">
+                            <strong>1. Average Across Valid Steps</strong>
+                            <p>We calculate the average percentage for each category across all completed workflow steps (those totaling exactly 100%).</p>
+                        </div>
+                        <div class="calc-step">
+                            <strong>2. Creative Firewall Score = Enhanceable + Irreplaceable</strong>
+                            <p>Your firewall score combines both categories that keep humans in control:</p>
+                            <ul>
+                                <li><strong>Irreplaceable:</strong> Your ultimate creative moat - work that originates only from you</li>
+                                <li><strong>Enhanceable:</strong> AI collaboration where you remain the creative director</li>
+                            </ul>
+                        </div>
+                        <div class="calc-step">
+                            <strong>3. Why This Matters</strong>
+                            <p><strong>Automatable work</strong> is vulnerable to replacement. <strong>Enhanceable work</strong> keeps you in the driver's seat while leveraging AI. <strong>Irreplaceable work</strong> is your strongest defense - the creative signature that can't be replicated.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="cta">
@@ -717,8 +794,8 @@
             stepDiv.draggable = true;
             stepDiv.innerHTML = `
                 <div class="step-main">
-                    <input type="text" placeholder="Next step in your workflow..." data-step="${stepCount}">
-                    <input type="text" class="tools-input" placeholder="Tools/software used..." data-tools="${stepCount}">
+                    <input type="text" placeholder="Next step in your creative process..." data-step="${stepCount}">
+                    <input type="text" class="tools-input" placeholder="Tools/software used (optional)..." data-tools="${stepCount}">
                 </div>
                 <div class="step-buttons">
                     <div class="spectrum-controls">
