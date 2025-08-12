@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Workflow Vulnerability Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid #f3f4f6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .project-input {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .project-input label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .project-input input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .project-input input:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+
+        .step-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .step-main {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .step-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .step-input input:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+
+        .tools-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #6b7280;
+            background: #f9fafb;
+        }
+
+        .tools-input:focus {
+            outline: none;
+            border-color: #dc2626;
+            background: white;
+        }
+
+        .step-buttons {
+            display: flex;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .step-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-circle, .btn-handshake, .btn-star {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-circle {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-circle:hover {
+            background: #fecaca;
+            transform: scale(1.1);
+        }
+
+        .btn-circle.active {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-handshake {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .btn-handshake:hover {
+            background: #ddd6fe;
+            transform: scale(1.1);
+        }
+
+        .btn-handshake.active {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-star {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-star:hover {
+            background: #e5e7eb;
+            transform: scale(1.1);
+        }
+
+        .btn-star.active {
+            background: #374151;
+            color: white;
+        }
+
+        .drag-handle {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: none;
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: grab;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drag-handle:hover {
+            background: #e5e7eb;
+            transform: scale(1.05);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .remove-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: #fee2e2;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #fecaca;
+            transform: scale(1.1);
+        }
+
+        .add-step {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: background 0.3s;
+        }
+
+        .add-step:hover {
+            background: #b91c1c;
+        }
+
+        .results {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+        }
+
+        .visual-breakdown {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .visual-breakdown h4 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background: #f3f4f6;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            display: flex;
+            border-radius: 15px;
+        }
+
+        .automatable-segment {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .enhanceable-segment {
+            background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .irreplaceable-segment {
+            background: linear-gradient(90deg, #374151, #4b5563);
+            transition: width 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .legend {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .legend-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #dc2626;
+        }
+
+        .legend-handshake {
+            width: 20px;
+            height: 20px;
+            background: #7c3aed;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .legend-star {
+            width: 20px;
+            height: 20px;
+            background: #374151;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .legend-visual {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item-visual {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .legend-circle-visual {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #dc2626;
+        }
+
+        .legend-handshake-visual {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            background: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .legend-star-visual {
+            width: 15px;
+            height: 15px;
+            background: #374151;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .vulnerable {
+            color: #dc2626;
+        }
+
+        .protected {
+            color: #374151;
+        }
+
+        .assessment-result {
+            text-align: center;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .high-risk {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fecaca;
+        }
+
+        .medium-risk {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #d1d5db;
+        }
+
+        .low-risk {
+            background: #f9fafb;
+            color: #111827;
+            border: 2px solid #e5e7eb;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .cta h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .cta p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .step-input {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .step-buttons {
+                justify-content: center;
+            }
+        }
+
+        .step-input.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+        
+        .step-input {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Creative Firewall™ Assessment</h1>
+            <p>Map your creative workflow to identify which tasks are at automation risk, which could be in collaboration with AI, and which are only yours: your creative moat.</p>
+        </div>
+        
+        <div class="content">
+            <div class="project-input">
+                <label for="projectName">What creative project are you most proud of?</label>
+                <input type="text" id="projectName" placeholder="e.g., Brand campaign that got 2M views, Album that hit streaming charts...">
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-circle"></div>
+                    <span>Automatable - Someone else could do this with detailed instructions</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-handshake">🤝</div>
+                    <span>Enhanceable - AI could help me guide it</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-star"></div>
+                    <span>Irreplaceable - Originates only from you</span>
+                </div>
+            </div>
+
+            <div id="stepsContainer">
+                <div class="step-input" draggable="true">
+                    <div class="step-main">
+                        <input type="text" placeholder="First step in your workflow..." data-step="0">
+                        <input type="text" class="tools-input" placeholder="Tools/software used (e.g., Photoshop, Figma, Logic Pro...)" data-tools="0">
+                    </div>
+                    <div class="step-buttons">
+                        <div class="step-controls">
+                            <button class="btn-circle" onclick="toggleButton(this, 'circle')" title="Automatable">⭕</button>
+                            <button class="btn-handshake" onclick="toggleButton(this, 'handshake')" title="Enhanceable">🤝</button>
+                            <button class="btn-star" onclick="toggleButton(this, 'star')" title="Irreplaceable">⭐</button>
+                        </div>
+                        <div class="step-controls">
+                            <button class="drag-handle" title="Drag to reorder">⋮⋮</button>
+                            <button class="remove-btn" onclick="removeStep(this)" title="Remove">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="add-step" onclick="addStep()">+ Add Another Step</button>
+
+            <div class="results" id="results" style="display: none;">
+                <div class="visual-breakdown">
+                    <h4>Your Creative Firewall Breakdown</h4>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="automatable-segment" id="automatableBar" style="width: 0%"></div>
+                            <div class="enhanceable-segment" id="enhanceableBar" style="width: 0%"></div>
+                            <div class="irreplaceable-segment" id="irreplaceableBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="legend-visual">
+                        <div class="legend-item-visual">
+                            <div class="legend-circle-visual"></div>
+                            <span id="automatableLabel">0 Automatable</span>
+                        </div>
+                        <div class="legend-item-visual">
+                            <div class="legend-handshake-visual">🤝</div>
+                            <span id="enhanceableLabel">0 Enhanceable</span>
+                        </div>
+                        <div class="legend-item-visual">
+                            <div class="legend-star-visual"></div>
+                            <span id="irreplaceableLabel">0 Irreplaceable</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric">
+                    <span class="metric-label">Total Steps</span>
+                    <span class="metric-value" id="totalSteps">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Automatable Tasks</span>
+                    <span class="metric-value vulnerable" id="automatableCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Enhanceable Tasks</span>
+                    <span class="metric-value" id="enhanceableCount" style="color: #7c3aed;">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Irreplaceable Tasks</span>
+                    <span class="metric-value protected" id="irreplaceableCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Creative Firewall Score</span>
+                    <span class="metric-value" id="firewallScore">0%</span>
+                </div>
+                
+                <div id="assessmentResult" class="assessment-result"></div>
+            </div>
+
+            <div class="cta">
+                <h3>Could Your Creative Signature Become a Preset?</h3>
+                <p>If yes, work until the answer is no. Focus on developing the enhanceable and irreplaceable tasks - that's where your Creative Firewall lives.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let stepCount = 1;
+
+        function addStep() {
+            const container = document.getElementById('stepsContainer');
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step-input';
+            stepDiv.draggable = true;
+            stepDiv.innerHTML = `
+                <div class="step-main">
+                    <input type="text" placeholder="Next step in your workflow..." data-step="${stepCount}">
+                    <input type="text" class="tools-input" placeholder="Tools/software used..." data-tools="${stepCount}">
+                </div>
+                <div class="step-buttons">
+                    <div class="step-controls">
+                        <button class="btn-circle" onclick="toggleButton(this, 'circle')" title="Automatable">⭕</button>
+                        <button class="btn-handshake" onclick="toggleButton(this, 'handshake')" title="Enhanceable">🤝</button>
+                        <button class="btn-star" onclick="toggleButton(this, 'star')" title="Irreplaceable">⭐</button>
+                    </div>
+                    <div class="step-controls">
+                        <button class="drag-handle" title="Drag to reorder">⋮⋮</button>
+                        <button class="remove-btn" onclick="removeStep(this)" title="Remove">✕</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(stepDiv);
+            stepCount++;
+            setupDragAndDrop(stepDiv);
+            updateResults();
+        }
+
+        function removeStep(button) {
+            const stepDiv = button.closest('.step-input');
+            stepDiv.remove();
+            updateResults();
+        }
+
+        function toggleButton(button, type) {
+            const stepDiv = button.closest('.step-input');
+            const allButtons = stepDiv.querySelectorAll('.btn-circle, .btn-handshake, .btn-star');
+            
+            // Remove active class from all buttons in this step
+            allButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            updateResults();
+        }
+
+        function updateResults() {
+            const steps = document.querySelectorAll('.step-input');
+            const inputs = document.querySelectorAll('.step-input .step-main input[data-step]');
+            
+            // Only count steps with content
+            const filledSteps = Array.from(inputs).filter(input => input.value.trim().length > 0);
+            const totalSteps = filledSteps.length;
+            
+            if (totalSteps === 0) {
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+
+            let automatableCount = 0;
+            let enhanceableCount = 0;
+            let irreplaceableCount = 0;
+
+            steps.forEach(step => {
+                const input = step.querySelector('.step-main input[data-step]');
+                if (input && input.value.trim().length > 0) {
+                    const circleActive = step.querySelector('.btn-circle').classList.contains('active');
+                    const handshakeActive = step.querySelector('.btn-handshake').classList.contains('active');
+                    const starActive = step.querySelector('.btn-star').classList.contains('active');
+                    
+                    if (circleActive) automatableCount++;
+                    if (handshakeActive) enhanceableCount++;
+                    if (starActive) irreplaceableCount++;
+                }
+            });
+
+            const automatablePercentage = totalSteps > 0 ? Math.round((automatableCount / totalSteps) * 100) : 0;
+            const enhanceablePercentage = totalSteps > 0 ? Math.round((enhanceableCount / totalSteps) * 100) : 0;
+            const irreplaceablePercentage = totalSteps > 0 ? Math.round((irreplaceableCount / totalSteps) * 100) : 0;
+
+            // Calculate Creative Firewall Score (Enhanceable + Irreplaceable)
+            const firewallScore = enhanceablePercentage + irreplaceablePercentage;
+
+            // Update visual progress bar
+            const automatableBar = document.getElementById('automatableBar');
+            const enhanceableBar = document.getElementById('enhanceableBar');
+            const irreplaceableBar = document.getElementById('irreplaceableBar');
+            
+            automatableBar.style.width = automatablePercentage + '%';
+            enhanceableBar.style.width = enhanceablePercentage + '%';
+            irreplaceableBar.style.width = irreplaceablePercentage + '%';
+            
+            // Show counts in progress bar if there's enough space
+            if (automatablePercentage > 15) {
+                automatableBar.textContent = automatableCount;
+            } else {
+                automatableBar.textContent = '';
+            }
+            
+            if (enhanceablePercentage > 15) {
+                enhanceableBar.textContent = enhanceableCount;
+            } else {
+                enhanceableBar.textContent = '';
+            }
+
+            if (irreplaceablePercentage > 15) {
+                irreplaceableBar.textContent = irreplaceableCount;
+            } else {
+                irreplaceableBar.textContent = '';
+            }
+
+            // Update labels
+            document.getElementById('automatableLabel').textContent = `${automatableCount} Automatable`;
+            document.getElementById('enhanceableLabel').textContent = `${enhanceableCount} Enhanceable`;
+            document.getElementById('irreplaceableLabel').textContent = `${irreplaceableCount} Irreplaceable`;
+
+            document.getElementById('totalSteps').textContent = totalSteps;
+            document.getElementById('automatableCount').textContent = automatableCount;
+            document.getElementById('enhanceableCount').textContent = enhanceableCount;
+            document.getElementById('irreplaceableCount').textContent = irreplaceableCount;
+            document.getElementById('firewallScore').textContent = firewallScore + '%';
+
+            // Color the firewall score
+            const scoreElement = document.getElementById('firewallScore');
+            if (firewallScore >= 70) {
+                scoreElement.className = 'metric-value protected';
+                scoreElement.style.color = '#059669';
+            } else if (firewallScore >= 40) {
+                scoreElement.className = 'metric-value';
+                scoreElement.style.color = '#7c3aed';
+            } else {
+                scoreElement.className = 'metric-value vulnerable';
+            }
+
+            // Assessment result
+            const resultElement = document.getElementById('assessmentResult');
+            if (automatablePercentage >= 60) {
+                resultElement.className = 'assessment-result high-risk';
+                resultElement.textContent = '🚨 High Risk: Most of your workflow is automatable. Focus urgently on developing enhanceable and irreplaceable skills.';
+            } else if (firewallScore >= 70) {
+                resultElement.className = 'assessment-result low-risk';
+                resultElement.textContent = '✅ Strong Creative Firewall™: Most of your work is enhanceable or irreplaceable. Keep building these strategic advantages.';
+            } else {
+                resultElement.className = 'assessment-result medium-risk';
+                resultElement.textContent = '⚠️ Growing Firewall: Good balance of enhanceable work. Focus on moving more tasks from automatable to enhanceable or irreplaceable.';
+            }
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        // Drag and drop functionality
+        function setupDragAndDrop(stepElement) {
+            stepElement.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text/plain', '');
+                stepElement.classList.add('dragging');
+            });
+
+            stepElement.addEventListener('dragend', function(e) {
+                stepElement.classList.remove('dragging');
+            });
+
+            stepElement.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            stepElement.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const draggingElement = document.querySelector('.dragging');
+                if (draggingElement && draggingElement !== stepElement) {
+                    const container = document.getElementById('stepsContainer');
+                    const allSteps = Array.from(container.children);
+                    const draggingIndex = allSteps.indexOf(draggingElement);
+                    const dropIndex = allSteps.indexOf(stepElement);
+                    
+                    if (draggingIndex < dropIndex) {
+                        stepElement.parentNode.insertBefore(draggingElement, stepElement.nextSibling);
+                    } else {
+                        stepElement.parentNode.insertBefore(draggingElement, stepElement);
+                    }
+                }
+            });
+        }
+
+        // Setup drag and drop for initial step
+        setupDragAndDrop(document.querySelector('.step-input'));
+
+        // Add event listeners to existing input
+        document.querySelector('.step-input .step-main input[data-step]').addEventListener('input', updateResults);
+        
+        // Add event listeners to new inputs when they're created
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('.step-input .step-main input[data-step]')) {
+                updateResults();
+            }
+        });
+    </script>
+</body>
+</html>
